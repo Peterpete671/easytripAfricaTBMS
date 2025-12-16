@@ -37,7 +37,7 @@ class Booking(models.Model):
     book_status = models.CharField(max_length=50, default='pending')
 
     def __str__(self):
-        return f"Booking, {self.book_id} - {self.username}"
+        return f"Booking, {self.book_id} - {self.user.username}"
     
 #Payment Model
 
