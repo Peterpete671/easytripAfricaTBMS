@@ -23,6 +23,10 @@ class Tours(models.Model):
     image = models.ImageField(upload_to='tours/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        verbose_name = "Tour"
+        verbose_name_plural = "Tours"
+
     def __str__(self):
         return self.tour_name
     
