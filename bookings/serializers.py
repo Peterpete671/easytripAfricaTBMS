@@ -7,21 +7,53 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'role', 'profile_picture')
+        fields = ('id', 'username', 'email', 'role', 'profile_picture', 'date_joined')
+        read_only_fields = ['id', 'date_joined']
 
 class TourSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tours
         fields = '__all__'
+        read_only_fields = ['tour_id', 'created_at']
 
 class BookingSerializer(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(source='user.username')
+    user = UserSerializer(read_only=True)
+    tour = TourSerializer(read_only=True)
+
+    user_id = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(),
+        source='user',
+        write_only=True
+    )
+    tour_id = serializers.PrimaryKeyRelatedField(
+        queryset=Tours.objects.all(),
+        source='tour',
+        write_only=True
+    )
 
     class Meta:
         model = Booking
-        fields = '__all__'
+        fields = [
+            'book_id',
+            'user',
+            'tour',
+            'user_id',
+            'tour_id',
+            'booking_date',
+            'travel_date',
+            'book_status'
+        ]
+        read_only_fields = ['book_id', 'booking_date']
 
 class PaymentSerializer(serializers.ModelSerializer):
+    booking = BookingSerializer(read_only=True)
+
+    book_id = serializers.PrimaryKeyRelatedField(
+        queryset=Booking.objects.all(),
+        source='booking',
+        write_only=True
+    )
     class Meta:
         model = Payment
         fields = '__all__'
+        read_only_fields = ['payment_id', 'paid_at']
