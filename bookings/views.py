@@ -66,6 +66,7 @@ class BookingViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         if user.is_staff:
+            # fixed: call all() to return a queryset
             return Booking.objects.all()
         return Booking.objects.filter(user=user)
     
@@ -91,7 +92,7 @@ class BookingViewSet(viewsets.ModelViewSet):
 class PaymentViewSet(viewsets.ModelViewSet):
     """
     /api/payments/
-    All poayment endpoints require authentication
+    All payment endpoints require authentication
     """
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer

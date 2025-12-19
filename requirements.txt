@@ -4,3 +4,7 @@ django-cors-headers==4.9.0
 djangorestframework==3.16.1
 sqlparse==0.5.4
 tzdata==2025.2
+
+djangorestframework-simplejwt>=2.8.0
+django-filter>=24.1
+Pillow>=10.0.0
