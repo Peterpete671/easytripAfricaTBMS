@@ -19,7 +19,7 @@ class IsOwnerOrAdmin(permissions.BasePermission):
     Intended for profile endpoints
     """
     def has_object_permission(self, request, view, obj):
-        return bool(request.user and (request.user_is_staff or obj == request.user))
+        return bool(request.user and (request.user.is_staff or obj == request.user))
     
 class IsBookingOwnerOrAdmin(permissions.BasePermission):
     """
@@ -66,7 +66,7 @@ class BookingViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         if user.is_staff:
-            return Booking.objects.all
+            return Booking.objects.all()
         return Booking.objects.filter(user=user)
     
     def get_permissions(self):
