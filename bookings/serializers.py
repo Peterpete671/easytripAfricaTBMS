@@ -5,10 +5,20 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=False)
+    
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'role', 'profile_picture', 'date_joined')
+        fields = ('id', 'username', 'email', 'password', 'role', 'profile_picture', 'date_joined')
         read_only_fields = ['id', 'date_joined']
+    
+    def create(self, validated_data):
+        password = validated_data.pop('password', None)
+        user = User.objects.create_user(**validated_data)
+        if password:
+            user.set_password(password)
+            user.save()
+        return user
 
 class TourSerializer(serializers.ModelSerializer):
     class Meta:

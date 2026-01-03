@@ -106,7 +106,7 @@ class PaymentViewSet(viewsets.ModelViewSet):
 class UserViewSet(viewsets.ModelViewSet):
     """
     /api/users/
-    POST: Create user, admin only
+    POST: Create user (public registration)
     GET(list): Admin only, paginated
     GET/{id}/: Admin, owner
     PUT/PATCH/{id}/: Admin or owner
@@ -116,7 +116,9 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
     def get_permissions(self):
-        if self.action in ['list', 'create', 'destroy']:
+        if self.action == 'create':
+            return [permissions.AllowAny()]
+        if self.action in ['list', 'destroy']:
             return [IsAdminUser()]
         if self.action in ['retrieve', 'update', 'partial_update']:
             return [IsOwnerOrAdmin()]
